@@ -1,4 +1,3 @@
-"# cml-rest-file-storage" 
 <h1>Rest file storage</h1>
 <h1>Table of Contents</h1>
 <ul>

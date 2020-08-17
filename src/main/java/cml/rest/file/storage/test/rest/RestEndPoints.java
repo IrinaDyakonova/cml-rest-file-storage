@@ -114,7 +114,6 @@ public class RestEndPoints {
 
             }
             return new ResponseEntity<>(responseDto, HttpStatus.NOT_FOUND);
-
         }
     }
 }

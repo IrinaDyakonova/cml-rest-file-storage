@@ -4,7 +4,6 @@ import cml.rest.file.storage.test.dto.FileCreatedDto;
 import cml.rest.file.storage.test.dto.FileListResponseDto;
 import cml.rest.file.storage.test.dto.FileRequestDto;
 import cml.rest.file.storage.test.dto.ResponseDto;
-import cml.rest.file.storage.test.dto.TagsRequestDto;
 import cml.rest.file.storage.test.mapper.FileMapper;
 import cml.rest.file.storage.test.model.File;
 import cml.rest.file.storage.test.service.FileService;
@@ -55,7 +54,7 @@ public class RestEndPoints {
     @RequestMapping(method = RequestMethod.POST, value = "/{id}/tags")
     public ResponseEntity<ResponseDto> postFileTag(
             @PathVariable("id") String id,
-            @Valid @RequestBody TagsRequestDto tags) {
+            @Valid @RequestBody List<String> tags) {
         ResponseDto responseDto = new ResponseDto();
 
         if (fileService.putTags(id, tags)) {
@@ -64,7 +63,7 @@ public class RestEndPoints {
         } else {
             responseDto.setSuccess(false);
             if (id.length() != 20) {
-                responseDto.setError("Size should be equal 20");
+                responseDto.setError("Size id should be equal 20");
 
             } else {
                 responseDto.setError("No Record With This Id or filed to add tags for file");
@@ -98,7 +97,7 @@ public class RestEndPoints {
     @ResponseBody
     public ResponseEntity<ResponseDto> deleteTags(
             @PathVariable("id") String id,
-            @Valid @RequestBody TagsRequestDto tags) {
+            @Valid @RequestBody List<String> tags) {
         ResponseDto responseDto = new ResponseDto();
 
         if (fileService.deleteTags(id, tags)) {
@@ -108,7 +107,7 @@ public class RestEndPoints {
         } else {
             responseDto.setSuccess(false);
             if (id.length() != 20) {
-                responseDto.setError("Size should be equal 20");
+                responseDto.setError("Size id should be equal 20");
 
             } else {
                 responseDto.setError("No Record With This Id or filed to delete tags for file");

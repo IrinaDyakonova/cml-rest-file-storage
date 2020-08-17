@@ -5,13 +5,14 @@ import static org.elasticsearch.index.query.QueryBuilders.regexpQuery;
 import static org.elasticsearch.index.query.QueryBuilders.termQuery;
 
 import cml.rest.file.storage.test.dto.FileListResponseDto;
-import cml.rest.file.storage.test.dto.TagsRequestDto;
 import cml.rest.file.storage.test.mapper.FileMapper;
 import cml.rest.file.storage.test.model.File;
 import cml.rest.file.storage.test.repository.FileRepository;
 import cml.rest.file.storage.test.util.ExtensionTags;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
@@ -87,39 +88,57 @@ public class FileService {
         return fileFromDB;
     }
 
-    public boolean putTags(String key, TagsRequestDto tags) {
-        if (fileRepository.findById(key).isPresent()) {
-            fileRepository.findById(key).ifPresent(file
-                            -> {
-                file.setTags(tags.getTags());
-                fileRepository.save(file);
-            }
-            );
+    public boolean putTags(String key, List<String> tags) {
+        Set<String> tagsSet = new HashSet<>(tags);
 
-            return true;
+        if (tags != null
+                && tags.size() != 0
+                && tags.size()
+                == tagsSet.size()) {
+
+            if (fileRepository.findById(key).isPresent()) {
+                fileRepository.findById(key).ifPresent(file
+                                -> {
+                            file.setTags(tags);
+                            fileRepository.save(file);
+                        }
+                );
+
+                return true;
+            } else {
+                return false;
+            }
         } else {
             return false;
         }
     }
 
-    public boolean deleteTags(String key, TagsRequestDto tags) {
-        if (fileRepository.findById(key).isPresent()) {
-            File file = fileRepository.findById(key).get();
-            for (String tag: tags.getTags()) {
-                int indexOf = file.getTags().indexOf(tag);
-                if (indexOf == -1) {
-                    return false;
-                } 
+    public boolean deleteTags(String key, List<String> tags) {
+        Set<String> tagsSet = new HashSet<>(tags);
+        if (tags != null
+                && tags.size() != 0
+                && tags.size()
+                == tagsSet.size()) {
+            if (fileRepository.findById(key).isPresent()) {
+                File file = fileRepository.findById(key).get();
+                for (String tag: tags) {
+                    int indexOf = file.getTags().indexOf(tag);
+                    if (indexOf == -1) {
+                        return false;
+                    }
+                }
+
+                for (String tag: tags
+                ) {
+                    file.getTags().remove(tag);
+
+                }
+                fileRepository.save(file);
+                return true;
+
+            } else {
+                return false;
             }
-
-            for (String tag: tags.getTags()
-            ) {
-                file.getTags().remove(tag);
-
-            }
-            fileRepository.save(file);
-            return true;
-
         } else {
             return false;
         }

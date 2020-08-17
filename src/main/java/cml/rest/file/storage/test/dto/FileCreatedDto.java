@@ -1,6 +1,7 @@
 package cml.rest.file.storage.test.dto;
 
 public class FileCreatedDto {
+
     String id;
 
     public FileCreatedDto() {

@@ -21,11 +21,11 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
             HttpStatus status,
             WebRequest request) {
         List<String> errors = new ArrayList<>();
-        for (FieldError error: ex.getBindingResult().getFieldErrors()) {
+        for (FieldError error : ex.getBindingResult().getFieldErrors()) {
             errors.add(error.getDefaultMessage());
         }
 
-        ApiError apiError = new ApiError(false,errors);
+        ApiError apiError = new ApiError(false, errors);
 
         return handleExceptionInternal(ex, apiError, headers, HttpStatus.BAD_REQUEST, request);
     }

@@ -50,7 +50,7 @@ public class FileService {
 
         BoolQueryBuilder builder = boolQuery();
         if (tags != null && tags.size() != 0) {
-            for (String tag: tags) {
+            for (String tag : tags) {
                 builder.must(termQuery("tags", tag));
             }
         }
@@ -69,11 +69,10 @@ public class FileService {
         SearchHits<File> files = operations.search(searchQuery, File.class);
         FileListResponseDto fileListResponseDto = new FileListResponseDto();
         fileListResponseDto.setTotal(files.getTotalHits());
-        for (SearchHit searchHit: files) {
+        for (SearchHit searchHit : files) {
             allFiles.add(fileMapper.toDto(searchHit));
         }
         fileListResponseDto.setPage(allFiles);
-
         return fileListResponseDto;
     }
 
@@ -95,7 +94,6 @@ public class FileService {
                 && tags.size() != 0
                 && tags.size()
                 == tagsSet.size()) {
-
             if (fileRepository.existsById(key)) {
                 File file = fileRepository.findById(key).get();
                 file.setTags(tags);
@@ -117,21 +115,17 @@ public class FileService {
                 == tagsSet.size()) {
             if (fileRepository.existsById(key)) {
                 File file = fileRepository.findById(key).get();
-                for (String tag: tags) {
+                for (String tag : tags) {
                     int indexOf = file.getTags().indexOf(tag);
                     if (indexOf == -1) {
                         return false;
                     }
                 }
-
-                for (String tag: tags
-                ) {
+                for (String tag : tags) {
                     file.getTags().remove(tag);
-
                 }
                 fileRepository.save(file);
                 return true;
-
             } else {
                 return false;
             }
@@ -149,5 +143,4 @@ public class FileService {
             return false;
         }
     }
-
 }

@@ -50,9 +50,9 @@ public class FileStorageIntegrationTest {
     @Test
     public void attemptFileCreateWithoutParams() throws Exception {
         mvc.perform(post("/file").content("{}").contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isBadRequest())
-            .andExpect(jsonPath("$.success", is(false)))
-            .andExpect(jsonPath("$.errors", hasSize(2)));
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.success", is(false)))
+                .andExpect(jsonPath("$.errors", hasSize(2)));
     }
 
     @Test

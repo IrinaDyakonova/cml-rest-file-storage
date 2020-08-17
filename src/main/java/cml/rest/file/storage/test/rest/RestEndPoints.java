@@ -40,7 +40,7 @@ public class RestEndPoints {
             @RequestParam(value = "q", required = false) String query) {
 
         return new ResponseEntity<>(
-                fileService.allFiles(tags,query,page,size),
+                fileService.allFiles(tags, query, page, size),
                 HttpStatus.OK);
     }
 

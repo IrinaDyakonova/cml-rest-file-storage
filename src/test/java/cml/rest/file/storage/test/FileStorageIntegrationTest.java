@@ -52,7 +52,7 @@ public class FileStorageIntegrationTest {
         mvc.perform(post("/file").content("{}").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("$.success", is(false)))
-            .andExpect(jsonPath("$.errors", hasSize(4)));
+            .andExpect(jsonPath("$.errors", hasSize(2)));
     }
 
     @Test
@@ -60,7 +60,7 @@ public class FileStorageIntegrationTest {
         mvc.perform(post("/file").content("{\"size\":123456}").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.success", is(false)))
-                .andExpect(jsonPath("$.errors", hasSize(3)));
+                .andExpect(jsonPath("$.errors", hasSize(1)));
     }
 
     @Test
@@ -68,7 +68,7 @@ public class FileStorageIntegrationTest {
         mvc.perform(post("/file").content("{\"name\":\"\",\"size\":123456}").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.success", is(false)))
-                .andExpect(jsonPath("$.errors", hasSize(2)));
+                .andExpect(jsonPath("$.errors", hasSize(1)));
     }
 
     @Test

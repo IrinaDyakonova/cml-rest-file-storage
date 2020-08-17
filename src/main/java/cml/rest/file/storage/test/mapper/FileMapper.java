@@ -30,6 +30,7 @@ public class FileMapper {
         fileCreatedDto.setId(file.getId());
         return fileCreatedDto;
     }
+
     public File toEntity(FileRequestDto fileRequestDto) {
         File file = new File();
         file.setName(fileRequestDto.getName());

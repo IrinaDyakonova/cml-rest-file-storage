@@ -46,7 +46,8 @@ public class RestEndPoints {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<FileCreatedDto> postFile(@Valid @RequestBody FileRequestDto fileRequestDto) {
+    public ResponseEntity<FileCreatedDto> postFile(
+            @Valid @RequestBody FileRequestDto fileRequestDto) {
         File file = fileService.saveFile(fileMapper.toEntity(fileRequestDto));
         return new ResponseEntity<>(fileMapper.formatResponse(file), HttpStatus.OK);
     }

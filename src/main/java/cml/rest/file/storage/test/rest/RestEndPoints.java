@@ -35,7 +35,7 @@ public class RestEndPoints {
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<FileListResponseDto> allFiles(
             @RequestParam(value = "tags", required = false) List<String> tags,
-            @RequestParam(value = "page", required = false) @Size(min = 1) Integer page,
+            @RequestParam(value = "page", required = false) @Size Integer page,
             @RequestParam(value = "size", required = false) @Size(min = 1) Integer size,
             @RequestParam(value = "q", required = false) String query) {
 

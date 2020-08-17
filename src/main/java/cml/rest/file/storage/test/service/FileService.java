@@ -59,7 +59,7 @@ public class FileService {
             builder.must(regexpQuery("name", ".*" + query + ".*"));
         }
 
-        page = page == null ? 0 : page - 1;
+        page = page == null || page == 0 ? 0 : page - 1;
         size = size == null ? 10 : size;
 
         NativeSearchQuery searchQuery = new NativeSearchQueryBuilder()

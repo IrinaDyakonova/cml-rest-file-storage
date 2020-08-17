@@ -1,5 +1,6 @@
 package cml.rest.file.storage.test.rest;
 
+import cml.rest.file.storage.test.dto.FileCreatedDto;
 import cml.rest.file.storage.test.dto.FileListResponseDto;
 import cml.rest.file.storage.test.dto.FileRequestDto;
 import cml.rest.file.storage.test.dto.ResponseDto;
@@ -39,15 +40,15 @@ public class RestEndPoints {
             @RequestParam(value = "size", required = false) @Size(min = 1) Integer size,
             @RequestParam(value = "q", required = false) String query) {
 
-        return new ResponseEntity<FileListResponseDto>(
+        return new ResponseEntity<>(
                 fileService.allFiles(tags,query,page,size),
                 HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<String> postFile(@Valid @RequestBody FileRequestDto fileRequestDto) {
+    public ResponseEntity<FileCreatedDto> postFile(@Valid @RequestBody FileRequestDto fileRequestDto) {
         File file = fileService.saveFile(fileMapper.toEntity(fileRequestDto));
-        return new ResponseEntity<String>("ID: " + file.getId(), HttpStatus.OK);
+        return new ResponseEntity<>(fileMapper.formatResponse(file), HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/{id}/tags")

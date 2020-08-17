@@ -1,5 +1,6 @@
 package cml.rest.file.storage.test.mapper;
 
+import cml.rest.file.storage.test.dto.FileCreatedDto;
 import cml.rest.file.storage.test.dto.FileRequestDto;
 import cml.rest.file.storage.test.dto.FileResponseDto;
 import cml.rest.file.storage.test.model.File;
@@ -24,6 +25,11 @@ public class FileMapper {
         return content;
     }
 
+    public FileCreatedDto formatResponse(File file) {
+        FileCreatedDto fileCreatedDto = new FileCreatedDto();
+        fileCreatedDto.setId(file.getId());
+        return fileCreatedDto;
+    }
     public File toEntity(FileRequestDto fileRequestDto) {
         File file = new File();
         file.setName(fileRequestDto.getName());

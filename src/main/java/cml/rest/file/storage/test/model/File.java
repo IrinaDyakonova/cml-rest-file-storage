@@ -45,14 +45,12 @@ public class File {
     }
 
     public void setTags(List<String> tags) {
-        for (String tag: tags
-             ) {
+        for (String tag : tags) {
             this.tags.add(tag);
         }
         Set<String> tagsSet = new HashSet<>(this.tags);
         this.tags.clear();
-        for (String tag: tagsSet
-             ) {
+        for (String tag : tagsSet) {
             this.tags.add(tag);
         }
     }

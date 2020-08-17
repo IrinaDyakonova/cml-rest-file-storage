@@ -3,25 +3,19 @@ package cml.rest.file.storage.test;
 import cml.rest.file.storage.test.model.File;
 import cml.rest.file.storage.test.rest.RestEndPoints;
 import cml.rest.file.storage.test.service.FileService;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
@@ -56,9 +50,9 @@ public class FileStorageIntegrationTest {
     @Test
     public void attemptFileCreateWithoutParams() throws Exception {
         mvc.perform(post("/file").content("{}").contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isBadRequest())
-            .andExpect(jsonPath("$.success", is(false)))
-            .andExpect(jsonPath("$.errors", hasSize(4)));
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.success", is(false)))
+                .andExpect(jsonPath("$.errors", hasSize(2)));
     }
 
     @Test
@@ -66,7 +60,7 @@ public class FileStorageIntegrationTest {
         mvc.perform(post("/file").content("{\"size\":123456}").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.success", is(false)))
-                .andExpect(jsonPath("$.errors", hasSize(3)));
+                .andExpect(jsonPath("$.errors", hasSize(1)));
     }
 
     @Test
@@ -74,7 +68,7 @@ public class FileStorageIntegrationTest {
         mvc.perform(post("/file").content("{\"name\":\"\",\"size\":123456}").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.success", is(false)))
-                .andExpect(jsonPath("$.errors", hasSize(2)));
+                .andExpect(jsonPath("$.errors", hasSize(1)));
     }
 
     @Test

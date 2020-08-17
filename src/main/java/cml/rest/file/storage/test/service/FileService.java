@@ -5,13 +5,14 @@ import static org.elasticsearch.index.query.QueryBuilders.regexpQuery;
 import static org.elasticsearch.index.query.QueryBuilders.termQuery;
 
 import cml.rest.file.storage.test.dto.FileListResponseDto;
-import cml.rest.file.storage.test.dto.TagsRequestDto;
 import cml.rest.file.storage.test.mapper.FileMapper;
 import cml.rest.file.storage.test.model.File;
 import cml.rest.file.storage.test.repository.FileRepository;
 import cml.rest.file.storage.test.util.ExtensionTags;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
@@ -49,7 +50,7 @@ public class FileService {
 
         BoolQueryBuilder builder = boolQuery();
         if (tags != null && tags.size() != 0) {
-            for (String tag: tags) {
+            for (String tag : tags) {
                 builder.must(termQuery("tags", tag));
             }
         }
@@ -58,7 +59,7 @@ public class FileService {
             builder.must(regexpQuery("name", ".*" + query + ".*"));
         }
 
-        page = page == null ? 0 : page - 1;
+        page = page == null || page == 0 ? 0 : page - 1;
         size = size == null ? 10 : size;
 
         NativeSearchQuery searchQuery = new NativeSearchQueryBuilder()
@@ -68,18 +69,17 @@ public class FileService {
         SearchHits<File> files = operations.search(searchQuery, File.class);
         FileListResponseDto fileListResponseDto = new FileListResponseDto();
         fileListResponseDto.setTotal(files.getTotalHits());
-        for (SearchHit searchHit: files) {
+        for (SearchHit searchHit : files) {
             allFiles.add(fileMapper.toDto(searchHit));
         }
         fileListResponseDto.setPage(allFiles);
-
         return fileListResponseDto;
     }
 
     public File saveFile(File file) {
         String[] fileExtension = file.getName().split("\\.");
 
-        String tag = extensionTags.getTagByExtension(fileExtension[1]);
+        String tag = extensionTags.getTagByExtension(fileExtension[fileExtension.length - 1]);
         if (tag != null) {
             file.getTags().add(tag);
         }
@@ -87,51 +87,60 @@ public class FileService {
         return fileFromDB;
     }
 
-    public boolean putTags(String key, TagsRequestDto tags) {
-        if (fileRepository.findById(key).isPresent()) {
-            fileRepository.findById(key).ifPresent(file
-                            -> {
-                file.setTags(tags.getTags());
-                fileRepository.save(file);
-            }
-            );
+    public boolean putTags(String key, List<String> tags) {
+        Set<String> tagsSet = new HashSet<>(tags);
 
-            return true;
+        if (tags != null
+                && tags.size() != 0
+                && tags.size()
+                == tagsSet.size()) {
+            if (fileRepository.existsById(key)) {
+                File file = fileRepository.findById(key).get();
+                file.setTags(tags);
+                fileRepository.save(file);
+                return true;
+            } else {
+                return false;
+            }
         } else {
             return false;
         }
     }
 
-    public boolean deleteTags(String key, TagsRequestDto tags) {
-        if (fileRepository.findById(key).isPresent()) {
-            File file = fileRepository.findById(key).get();
-            for (String tag: tags.getTags()) {
-                int indexOf = file.getTags().indexOf(tag);
-                if (indexOf == -1) {
-                    return false;
-                } 
+    public boolean deleteTags(String key, List<String> tags) {
+        Set<String> tagsSet = new HashSet<>(tags);
+        if (tags != null
+                && tags.size() != 0
+                && tags.size()
+                == tagsSet.size()) {
+            if (fileRepository.existsById(key)) {
+                File file = fileRepository.findById(key).get();
+                for (String tag : tags) {
+                    int indexOf = file.getTags().indexOf(tag);
+                    if (indexOf == -1) {
+                        return false;
+                    }
+                }
+                for (String tag : tags) {
+                    file.getTags().remove(tag);
+                }
+                fileRepository.save(file);
+                return true;
+            } else {
+                return false;
             }
-
-            for (String tag: tags.getTags()
-            ) {
-                file.getTags().remove(tag);
-
-            }
-            fileRepository.save(file);
-            return true;
-
         } else {
             return false;
         }
     }
 
     public boolean deleteFile(String key) {
-        if (fileRepository.findById(key).isPresent()) {
-            fileRepository.findById(key).ifPresent(file -> fileRepository.delete(file));
+        if (fileRepository.existsById(key)) {
+            File file = fileRepository.findById(key).get();
+            fileRepository.delete(file);
             return true;
         } else {
             return false;
         }
     }
-
 }

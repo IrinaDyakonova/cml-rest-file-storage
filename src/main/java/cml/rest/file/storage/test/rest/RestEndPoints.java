@@ -1,9 +1,9 @@
 package cml.rest.file.storage.test.rest;
 
+import cml.rest.file.storage.test.dto.FileCreatedDto;
 import cml.rest.file.storage.test.dto.FileListResponseDto;
 import cml.rest.file.storage.test.dto.FileRequestDto;
 import cml.rest.file.storage.test.dto.ResponseDto;
-import cml.rest.file.storage.test.dto.TagsRequestDto;
 import cml.rest.file.storage.test.mapper.FileMapper;
 import cml.rest.file.storage.test.model.File;
 import cml.rest.file.storage.test.service.FileService;
@@ -35,25 +35,26 @@ public class RestEndPoints {
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<FileListResponseDto> allFiles(
             @RequestParam(value = "tags", required = false) List<String> tags,
-            @RequestParam(value = "page", required = false) @Size(min = 1) Integer page,
+            @RequestParam(value = "page", required = false) @Size Integer page,
             @RequestParam(value = "size", required = false) @Size(min = 1) Integer size,
             @RequestParam(value = "q", required = false) String query) {
 
-        return new ResponseEntity<FileListResponseDto>(
-                fileService.allFiles(tags,query,page,size),
+        return new ResponseEntity<>(
+                fileService.allFiles(tags, query, page, size),
                 HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<String> postFile(@Valid @RequestBody FileRequestDto fileRequestDto) {
+    public ResponseEntity<FileCreatedDto> postFile(
+            @Valid @RequestBody FileRequestDto fileRequestDto) {
         File file = fileService.saveFile(fileMapper.toEntity(fileRequestDto));
-        return new ResponseEntity<String>("ID: " + file.getId(), HttpStatus.OK);
+        return new ResponseEntity<>(fileMapper.formatResponse(file), HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/{id}/tags")
     public ResponseEntity<ResponseDto> postFileTag(
             @PathVariable("id") String id,
-            @Valid @RequestBody TagsRequestDto tags) {
+            @Valid @RequestBody List<String> tags) {
         ResponseDto responseDto = new ResponseDto();
 
         if (fileService.putTags(id, tags)) {
@@ -62,10 +63,10 @@ public class RestEndPoints {
         } else {
             responseDto.setSuccess(false);
             if (id.length() != 20) {
-                responseDto.setError("Size should be equal 20");
+                responseDto.setError("Size id should be equal 20");
 
             } else {
-                responseDto.setError("No Record With This Id or filed to add tags for file");
+                responseDto.setError("No Record With This Id or failed to add tags for file");
 
             }
             return new ResponseEntity<>(responseDto, HttpStatus.BAD_REQUEST);
@@ -96,7 +97,7 @@ public class RestEndPoints {
     @ResponseBody
     public ResponseEntity<ResponseDto> deleteTags(
             @PathVariable("id") String id,
-            @Valid @RequestBody TagsRequestDto tags) {
+            @Valid @RequestBody List<String> tags) {
         ResponseDto responseDto = new ResponseDto();
 
         if (fileService.deleteTags(id, tags)) {
@@ -106,14 +107,13 @@ public class RestEndPoints {
         } else {
             responseDto.setSuccess(false);
             if (id.length() != 20) {
-                responseDto.setError("Size should be equal 20");
+                responseDto.setError("Size id should be equal 20");
 
             } else {
-                responseDto.setError("No Record With This Id or filed to delete tags for file");
+                responseDto.setError("No Record With This Id or failed to delete tags for file");
 
             }
             return new ResponseEntity<>(responseDto, HttpStatus.NOT_FOUND);
-
         }
     }
 }

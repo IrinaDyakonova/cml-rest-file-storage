@@ -2,14 +2,11 @@ package cml.rest.file.storage.test.dto;
 
 import cml.rest.file.storage.test.annotation.FileNameConstraint;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 public class FileRequestDto {
 
-    @NotNull(message = "Name param is required")
-    @NotEmpty(message = "Name param is cannot be empty")
-    @FileNameConstraint
+    @FileNameConstraint(message = "")
     private String name;
     @Min(value = 0, message = "Size should not be less than 0")
     @NotNull(message = "Size param is required")

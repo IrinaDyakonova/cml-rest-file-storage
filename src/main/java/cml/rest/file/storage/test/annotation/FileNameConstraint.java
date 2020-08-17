@@ -12,7 +12,7 @@ import javax.validation.Payload;
 @Target({ ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface FileNameConstraint {
-    String message() default "File name format is invalid!";
+    String message();
 
     Class<?>[] groups() default {};
 

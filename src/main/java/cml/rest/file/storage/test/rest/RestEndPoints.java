@@ -66,7 +66,7 @@ public class RestEndPoints {
                 responseDto.setError("Size id should be equal 20");
 
             } else {
-                responseDto.setError("No Record With This Id or filed to add tags for file");
+                responseDto.setError("No Record With This Id or failed to add tags for file");
 
             }
             return new ResponseEntity<>(responseDto, HttpStatus.BAD_REQUEST);
@@ -110,7 +110,7 @@ public class RestEndPoints {
                 responseDto.setError("Size id should be equal 20");
 
             } else {
-                responseDto.setError("No Record With This Id or filed to delete tags for file");
+                responseDto.setError("No Record With This Id or failed to delete tags for file");
 
             }
             return new ResponseEntity<>(responseDto, HttpStatus.NOT_FOUND);

@@ -96,14 +96,10 @@ public class FileService {
                 && tags.size()
                 == tagsSet.size()) {
 
-            if (fileRepository.findById(key).isPresent()) {
-                fileRepository.findById(key).ifPresent(file
-                                -> {
-                            file.setTags(tags);
-                            fileRepository.save(file);
-                        }
-                );
-
+            if (fileRepository.existsById(key)) {
+                File file = fileRepository.findById(key).get();
+                file.setTags(tags);
+                fileRepository.save(file);
                 return true;
             } else {
                 return false;
@@ -119,7 +115,7 @@ public class FileService {
                 && tags.size() != 0
                 && tags.size()
                 == tagsSet.size()) {
-            if (fileRepository.findById(key).isPresent()) {
+            if (fileRepository.existsById(key)) {
                 File file = fileRepository.findById(key).get();
                 for (String tag: tags) {
                     int indexOf = file.getTags().indexOf(tag);
@@ -145,8 +141,9 @@ public class FileService {
     }
 
     public boolean deleteFile(String key) {
-        if (fileRepository.findById(key).isPresent()) {
-            fileRepository.findById(key).ifPresent(file -> fileRepository.delete(file));
+        if (fileRepository.existsById(key)) {
+            File file = fileRepository.findById(key).get();
+            fileRepository.delete(file);
             return true;
         } else {
             return false;

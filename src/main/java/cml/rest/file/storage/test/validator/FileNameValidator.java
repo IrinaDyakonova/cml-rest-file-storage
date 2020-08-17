@@ -8,7 +8,7 @@ public class FileNameValidator implements ConstraintValidator<FileNameConstraint
 
     @Override
     public boolean isValid(String name, ConstraintValidatorContext context) {
-        String regex = ".+\\.[A-Za-z]{2,4}";
+        String regex = ".+\\.[A-Za-z0-9]{2,4}$";
         return name != null
                 && name.matches(regex)
                 && name.length() >= 6

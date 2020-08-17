@@ -79,7 +79,7 @@ public class FileService {
     public File saveFile(File file) {
         String[] fileExtension = file.getName().split("\\.");
 
-        String tag = extensionTags.getTagByExtension(fileExtension[1]);
+        String tag = extensionTags.getTagByExtension(fileExtension[fileExtension.length-1]);
         if (tag != null) {
             file.getTags().add(tag);
         }

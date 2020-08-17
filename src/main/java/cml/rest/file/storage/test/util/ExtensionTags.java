@@ -12,6 +12,7 @@ public class ExtensionTags {
         tags.put("doc","document");
         tags.put("docx","document");
         tags.put("pdf","document");
+        tags.put("txt","document");
         tags.put("xls","table");
         tags.put("xlsx","table");
         tags.put("zip","archive");
